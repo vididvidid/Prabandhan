@@ -1,6 +1,8 @@
 # Prabandhan
 Project Management Software
-Developers name:
-Vivek
-Vishwajeet
-Yash
+
+
+#Developers name:
+Vivek singh
+Vishwajeet singh
+Yash kumar kasaudhan
