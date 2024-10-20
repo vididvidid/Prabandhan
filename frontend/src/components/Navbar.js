@@ -14,6 +14,12 @@ function Navbar({ user, logout }) {
 
           {/* Navigation Links */}
           <div className="flex space-x-4 items-center">
+            <Link
+              to="/about"
+              className="px-4 py-2 bg-blue-700 text-white rounded-md hover:bg-blue-600 transition"
+            >
+              About Us
+            </Link>
             {user ? (
               // If the user is logged in, show additional navigation options
               <>
