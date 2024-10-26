@@ -27,14 +27,30 @@ export function mapDispatchToProps(dispatch: Dispatch<Action<any>>) {
         deleteBoard: (boardId: string) =>
             dispatch(kanbanBoardActions.startDeleteBoard({ boardId })),
 
-        
+        addSticky: () =>
+            dispatch(kanbanBoardActions.startAddSticky({})),
+        updateSticky: (v: KanbanRecord) =>
+            dispatch(kanbanBoardActions.startUpdateSticky(v)),
+        updateStickyLanes: (v: UpdateStickyLanesPayload) =>
+            dispatch(kanbanBoardActions.startUpdateStickyLanes(v)),
+        archiveSticky: (kanbanId: string) =>
+            dispatch(kanbanBoardActions.startArchiveSticky({ kanbanId })),
+        unarchiveSticky: (kanbanId: string) =>
+            dispatch(kanbanBoardActions.startUnarchiveSticky({ kanbanId })),
+        deleteSticky: (kanbanId: string) =>
+            dispatch(kanbanBoardActions.startDeleteSticky({ kanbanId })),
+
         editBoardAndStickys: (v: KanbanBoardRecord) =>
             dispatch(kanbanBoardActions.startEditBoardAndStickys(v)),
 
         refreshActiveBoard: () =>
             dispatch(kanbanBoardActions.startRefreshActiveBoard({})),
 
-      
+        // from AppEventsActions
+        showAlertDialog: (v: ConfirmDialogProps) =>
+            dispatch(appEventsActions.showAlertDialog(v)),
+        closeAlertDialog: () =>
+            dispatch(appEventsActions.closeAlertDialog()),
     };
 }
 
