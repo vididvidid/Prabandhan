@@ -1,58 +1,44 @@
-import { Action }             from 'typescript-fsa';
-import { Dispatch }           from 'redux';
-import { KanbanRecord,
-         ConfirmDialogProps,
-         AppState }           from '../types';
-import { AppEventsActions as AppEventsActions_,
-         appEventsActions }   from '../actions/AppEventsActions';
-import { CalendarActions as CalendarActions_,
-         calendarActions }    from '../actions/CalendarActions';
-import { KanbanBoardActions as KanbanBoardActions_,
-         kanbanBoardActions } from '../actions/KanbanBoardActions';
+import { reducerWithInitialState,
+    ReducerBuilder }         from 'typescript-fsa-reducers';
+import { CalendarState }          from '../types';
+import { calendarActions }        from '../actions/CalendarActions';
 
 
 
-export type AppEventsActions = AppEventsActions_;
-export type CalendarActions = CalendarActions_;
-export type KanbanBoardActions = KanbanBoardActions_;
+let calendarReducer: ReducerBuilder<CalendarState, CalendarState> = null as any;
 
-
-export function mapDispatchToProps(dispatch: Dispatch<Action<any>>) {
-    return {
-        showToday: () =>
-            dispatch(calendarActions.showToday()),
-        showNextMonth: () =>
-            dispatch(calendarActions.showNextMonth()),
-        showPreviousMonth: () =>
-            dispatch(calendarActions.showPreviousMonth()),
-        showNextYear: () =>
-            dispatch(calendarActions.showNextYear()),
-        showPreviousYear: () =>
-            dispatch(calendarActions.showPreviousYear()),
-
-        // from AppEventsActions
-        showAlertDialog: (v: ConfirmDialogProps) =>
-            dispatch(appEventsActions.showAlertDialog(v)),
-        closeAlertDialog: () =>
-            dispatch(appEventsActions.closeAlertDialog()),
-
-        // from KanbanBoardActions
-        changeActiveBoard: (boardId: string) =>
-            dispatch(kanbanBoardActions.startChangeActiveBoard(Object.assign({}, { boardId }, { dispatch }))),
-        updateBoardName: (v: {boardId: string, boardName: string}) =>
-            dispatch(kanbanBoardActions.startUpdateBoardName(v)),
-        updateSticky: (v: KanbanRecord) =>
-            dispatch(kanbanBoardActions.startUpdateSticky(Object.assign({}, v, { dispatch }))),
-        archiveSticky: (kanbanId: string) =>
-            dispatch(kanbanBoardActions.startArchiveSticky({ kanbanId })),
-        unarchiveSticky: (kanbanId: string) =>
-            dispatch(kanbanBoardActions.startUnarchiveSticky({ kanbanId })),
-        deleteSticky: (kanbanId: string) =>
-            dispatch(kanbanBoardActions.startDeleteSticky(Object.assign({}, { kanbanId }, { dispatch }))),
-    }
+export async function getCalendarReducer() {
+if (!calendarReducer) {
+   const initialState: CalendarState = {
+       activeMonth: new Date(), // TODO: not impl
+   };
+   calendarReducer = reducerWithInitialState(initialState)
+       .case(calendarActions.showToday, (state) => {
+           const now = new Date();
+           const m = new Date(now.getFullYear(), now.getMonth(), 1);
+           return Object.assign({}, state, { activeMonth: m });
+       })
+       .case(calendarActions.showNextMonth, (state) => {
+           const now = state.activeMonth;
+           const m = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+           return Object.assign({}, state, { activeMonth: m });
+       })
+       .case(calendarActions.showPreviousMonth, (state) => {
+           const now = state.activeMonth;
+           const m = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+           return Object.assign({}, state, { activeMonth: m });
+       })
+       .case(calendarActions.showNextYear, (state) => {
+           const now = state.activeMonth;
+           const m = new Date(now.getFullYear() + 1, now.getMonth(), 1);
+           return Object.assign({}, state, { activeMonth: m });
+       })
+       .case(calendarActions.showPreviousYear, (state) => {
+           const now = state.activeMonth;
+           const m = new Date(now.getFullYear() - 1, now.getMonth(), 1);
+           return Object.assign({}, state, { activeMonth: m });
+       })
+       ;
 }
-
-
-export function mapStateToProps(appState: AppState) {
-    return Object.assign({}, { kanbanBoardState: appState.kanbanBoard }, appState.calendar);
+return calendarReducer;
 }
