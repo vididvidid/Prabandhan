@@ -6,6 +6,7 @@ export default function KanbanBoard() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [wip, setWip] = useState([]);
+  const [completed, setCompleted] = useState([]);
 
   function handleAdd(e) {
     e.preventDefault();
@@ -25,6 +26,12 @@ export default function KanbanBoard() {
     const itemToMove = todos[index];
     setWip([...wip, itemToMove]);
     setTodos(todos.filter((_, i) => i !== index));
+  }
+
+  function moveToCompleted(index) {
+    const itemToMove = wip[index];
+    setCompleted([...completed, { ...itemToMove, completedAt: new Date() }]);
+    setWip(wip.filter((_, i) => i !== index));
   }
 
   return (
@@ -58,47 +65,48 @@ export default function KanbanBoard() {
           </div>
         </div>
 
-            {isOpen && (
-              <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center">
-                <div className="bg-white p-6 rounded-lg w-80">
-                  <form onSubmit={handleAdd}>
-                    <input
-                      type="text"
-                      value={title}
-                      onChange={(e) => setTitle(e.target.value)}
-                      placeholder="Task name"
-                      className="w-full border p-2 mb-4 rounded"
-                      required
-                    />
-                    <textarea
-                      value={description}
-                      onChange={(e) => setDescription(e.target.value)}
-                      placeholder="Description"
-                      className="w-full border p-2 mb-4 rounded"
-                    />
-                    <div className="flex gap-2">
-                      <button
-                        type="submit"
-                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                      >
-                        Add
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIsOpen(false);
-                          setTitle("");
-                          setDescription("");
-                        }}
-                        className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  </form>
+        {isOpen && (
+          <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center">
+            <div className="bg-white p-6 rounded-lg w-80">
+              <form onSubmit={handleAdd}>
+                <input
+                  type="text"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="Task name"
+                  className="w-full border p-2 mb-4 rounded"
+                  required
+                />
+                <textarea
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Description"
+                  className="w-full border p-2 mb-4 rounded"
+                />
+                <div className="flex gap-2">
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                  >
+                    Add
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsOpen(false);
+                      setTitle("");
+                      setDescription("");
+                    }}
+                    className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+                  >
+                    Cancel
+                  </button>
                 </div>
-              </div>
-            )}
+              </form>
+            </div>
+          </div>
+        )}
+
         {/* Work in Progress List */}
         <div className="w-full">
           <div className="mb-6">
@@ -109,12 +117,35 @@ export default function KanbanBoard() {
               <div key={index} className="border p-4 rounded shadow">
                 <h3 className="font-bold">{wi.title}</h3>
                 <p className="text-gray-600 mt-2">{wi.description}</p>
+                <button
+                  onClick={() => moveToCompleted(index)}
+                  className="mt-3 px-3 py-1 bg-purple-500 text-white rounded hover:bg-purple-600"
+                >
+                  Move to Completed
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Completed List */}
+        <div className="w-full">
+          <div className="mb-6">
+            <h1 className="text-2xl font-bold">Completed</h1>
+          </div>
+          <div className="space-y-4">
+            {completed.map((item, index) => (
+              <div key={index} className="border p-4 rounded shadow bg-gray-50">
+                <h3 className="font-bold">{item.title}</h3>
+                <p className="text-gray-600 mt-2">{item.description}</p>
+                <p className="text-xs text-gray-500 mt-2">
+                  Completed: {item.completedAt.toLocaleDateString()}
+                </p>
               </div>
             ))}
           </div>
         </div>
       </div>
-
     </div>
   );
 }
