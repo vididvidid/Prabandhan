@@ -140,3 +140,36 @@ export type KanbanDialogProps = {
 };
 
 
+//// Action payloads ////
+
+export interface UpdateStickyLanesPayload {
+    kanbanId: string;
+    taskStatusValue: string;
+    teamOrStoryValue: string;
+};
+
+
+//// States ////
+
+export interface KanbanBoardState {
+    activeBoard: KanbanBoardRecord;
+    boards: KanbanBoardRecord[];
+    activeBoardId: string;
+    activeBoardIndex: number;
+}
+
+export interface CalendarState {
+    activeMonth: Date;
+}
+
+export interface AppEventsState {
+    alertDialog: ConfirmDialogProps;
+    appConfig: AppConfig;
+}
+
+export type AppState = {
+    router: RouterState,
+    appEvents: AppEventsState,
+    kanbanBoard: KanbanBoardState,
+    calendar: CalendarState,
+};
