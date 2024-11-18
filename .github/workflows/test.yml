@@ -1,0 +1,44 @@
+on: 
+  [push, pull_request]  
+
+jobs:   
+  test:     
+    name: Test on Node.js ${{ matrix.node_version }} and ${{ matrix.os }}     
+    runs-on: ${{ matrix.os }}     
+    strategy:       
+      matrix:         
+        node_version: [10, 12, 14, 15]         
+        os: [ubuntu-latest]      
+    steps:     
+    - uses: actions/checkout@v1     
+    - name: Use Node.js ${{ matrix.node_version }}       
+      uses: actions/setup-node@v1       
+      with:         
+        node-version: ${{ matrix.node_version }}          
+    - name: npm install, build, and test       
+      run: |         
+        cd prabandhan_v2
+        npm install -g npm         
+        npm ci         
+        npm run build   
+
+  artifact:     
+    name: Build artifact     
+    runs-on: ubuntu-latest     
+    needs: [test]      
+    steps:     
+    - uses: actions/checkout@v1     
+    - name: Use Node.js 12       
+      uses: actions/setup-node@v1       
+      with:         
+        node-version: 12          
+    - name: npm install and build       
+      run: |         
+        cd prabandhan_v2
+        npm install -g npm         
+        npm ci         
+        npm run build      
+    - uses: actions/upload-artifact@master       
+      with:         
+        name: production-build         
+        path: prabandhan_v2/build
