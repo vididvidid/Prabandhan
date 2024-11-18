@@ -8,16 +8,15 @@ import Login from './components/Login';
 import Signup from './components/Signup';
 
 function App() {
-  const user = "John Doe"; // Replace with actual user logic
+  const user = "John Doe";
   const logout = () => {
     console.log("Logout clicked");
-    // Implement logout functionality
   };
 
   return (
     <Router>
       <Navbar user={user} logout={logout} />
-      <div className="pt-16"> {/* Add padding to avoid overlapping with fixed navbar */}
+      <div className="pt-16">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<AboutUs />} />
