@@ -223,7 +223,7 @@ const AppDrawer: React.FC<AppDrawerProps> = (props) => {
                             </ListItem>
                             <List>
                                 <ListItem button
-                                        onClick={ev => window.open('https://github.com/shellyln/kanban-board-app#tips', '_blank')}>
+                                        onClick={ev => window.open('https://github.com/vididvidid', '_blank')}>
                                     <ListItemIcon><HelpIcon /></ListItemIcon>
                                     {open ? <ListItemText primary="Help" /> : <></>}
                                 </ListItem>

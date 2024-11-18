@@ -45,4 +45,6 @@ export const calendarActions = {
     showToday: actionCreator<void>('ACTIONS_SHOW_TODAY'),
     showNextMonth: actionCreator<void>('ACTIONS_SHOW_NEXT_MONTH'),
     showPreviousMonth: actionCreator<void>('ACTIONS_SHOW_PREVIOUS_MONTH'),
-    showNextYear: acti
+    showNextYear: actionCreator<void>('ACTIONS_SHOW_NEXT_YEAR'),
+    showPreviousYear: actionCreator<void>('ACTIONS_SHOW_PREVIOUS_YEAR'),
+};
