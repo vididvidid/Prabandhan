@@ -1,23 +1,19 @@
 import { useState } from 'react';
 import AllProjects from './AllProjects';
 import KanbanBoard from './KanbanBoard';
-// import AssignMembersModal from './AssignMembersModal'; // Import the Assign Members Modal
-import AddProjectModal from './AddProjectModal'; // Import the Add Project Modal
+import AddProjectModal from './AddProjectModal'; 
 
 function ProjectDashboard({ projects, setProjects }) {
   const [selectedProject, setSelectedProject] = useState(null);
-  // const [showAssignModal, setShowAssignModal] = useState(false); // To control the modal visibility
-  // const [projectToAssign, setProjectToAssign] = useState(null); // To store the selected project for assigning members
-  const [showAddProjectModal, setShowAddProjectModal] = useState(false); // For Add Project modal visibility
+  const [showAddProjectModal, setShowAddProjectModal] = useState(false); 
 
   const members = [
     { id: 1, name: 'John Doe' },
     { id: 2, name: 'Jane Smith' }
   ];
 
-  // Function to open the Add Project modal
   const handleAddProject = () => {
-    setShowAddProjectModal(true); // Show the modal to add a new project
+    setShowAddProjectModal(true); 
   };
 
   return (
@@ -53,14 +49,6 @@ function ProjectDashboard({ projects, setProjects }) {
         </div>
       )}
 
-      {/* Assign Members Modal */}
-      {/* {showAssignModal && (
-        <AssignMembersModal
-          project={projectToAssign} // Pass selected project to modal
-          setShowAssignModal={setShowAssignModal} // Function to close modal
-          setProjects={setProjects} // Function to update projects after assigning members
-        />
-      )} */}
 
       {/* Add Project Modal */}
       {showAddProjectModal && (

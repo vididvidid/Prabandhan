@@ -14,9 +14,33 @@ function Navbar({ user, logout }) {
 
           {/* Navigation Links */}
           <div className="flex space-x-4 items-center">
+            <Link
+              to="/about"
+              className="px-4 py-2 bg-blue-700 text-white rounded-md hover:bg-blue-600 transition"
+            >
+              About Us
+            </Link>
             {user ? (
-              // If the user is logged in, show username and Logout button
+              // If the user is logged in, show additional navigation options
               <>
+                <Link
+                  to="/dashboard"
+                  className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition"
+                >
+                  Dashboard
+                </Link>
+                <Link
+                  to="/profile"
+                  className="px-4 py-2 bg-purple-500 text-white rounded-md hover:bg-purple-600 transition"
+                >
+                  Profile
+                </Link>
+                <Link
+                  to="/settings"
+                  className="px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition"
+                >
+                  Settings
+                </Link>
                 <span className="text-white mr-4">{user}</span>
                 <button
                   onClick={logout}
