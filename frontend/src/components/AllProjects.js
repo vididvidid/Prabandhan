@@ -1,105 +1,65 @@
-import { useState } from 'react';
+import React from 'react';
 
-function AllProjects({ projects, setProjects, onViewBoard }) {
-  const [isCreating, setIsCreating] = useState(false);
-  const [projectName, setProjectName] = useState('');
-  const [projectDescription, setProjectDescription] = useState('');
+function AllProjects({ projects, setProjects, onViewBoard, onAssignMembers }) {
 
-  const handleCreateProject = (e) => {
-    e.preventDefault();
-    const newProject = { 
-      id: Date.now(), 
-      name: projectName, 
-      description: projectDescription,
-      kanbanData: {
-        todos: [],
-        wip: [],
-        completed: []
-      }
-    };
-    setProjects((prevProjects) => [...prevProjects, newProject]);
-    setProjectName('');
-    setProjectDescription('');
-    setIsCreating(false);
+  // Function to delete the project
+  const handleDeleteProject = (projectId) => {
+    // Filter out the project with the specified id
+    const updatedProjects = projects.filter((project) => project.id !== projectId);
+    setProjects(updatedProjects); // Update the projects list after deletion
   };
 
   return (
     <div>
-      {/* Rest of the component remains the same */}
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">All Projects</h1>
-        <button 
-          onClick={() => setIsCreating(!isCreating)}
-          className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
-        >
-          {isCreating ? 'Cancel' : 'Create New Project'}
-        </button>
-      </div>
 
-      {isCreating && (
-        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <h2 className="text-xl font-semibold mb-4">Create New Project</h2>
-          <form onSubmit={handleCreateProject} className="space-y-4">
-            <div>
-              <label htmlFor="projectName" className="block text-sm font-medium text-gray-700">
-                Project Name
-              </label>
-              <input
-                type="text"
-                id="projectName"
-                value={projectName}
-                onChange={(e) => setProjectName(e.target.value)}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                required
-              />
-            </div>
-            <div>
-              <label htmlFor="projectDescription" className="block text-sm font-medium text-gray-700">
-                Description
-              </label>
-              <textarea
-                id="projectDescription"
-                value={projectDescription}
-                onChange={(e) => setProjectDescription(e.target.value)}
-                rows={3}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                required
-              />
-            </div>
-            <div className="flex justify-end">
-              <button 
-                type="submit"
-                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
-              >
-                Create Project
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Grid layout to display projects side by side */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {projects.map((project) => (
-          <div 
-            key={project.id} 
-            className="bg-white border rounded-lg p-6 shadow hover:shadow-md transition-shadow"
+          <div
+            key={project.id}
+            className="bg-white p-4 rounded-lg shadow-md flex flex-col justify-between"
           >
-            <h2 className="text-xl font-semibold">{project.name}</h2>
-            <p className="text-gray-600 mt-2">{project.description}</p>
-            <div className="mt-4 flex justify-between items-center">
-              <button 
+            <div>
+              <h3 className="font-bold text-lg">{project.name}</h3>
+              <p>{project.description}</p>
+
+              {/* Display the assigned members */}
+              {project.teamMembers && project.teamMembers.length > 0 && (
+                <div className="mt-2">
+                  <h4 className="font-semibold">Assigned Members:</h4>
+                  <ul className="list-disc pl-5">
+                    {project.teamMembers.map((member, index) => (
+                      <li key={index}>{member}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+
+            {/* Buttons for actions */}
+            <div className="flex justify-between mt-4 space-x-2">
+              {/* View Kanban Board Button */}
+              <button
                 onClick={() => onViewBoard(project)}
-                className="text-blue-500 hover:text-blue-600"
+                className="bg-blue-500 text-white px-3 py-1 text-sm rounded-md hover:bg-blue-600 transition"
               >
                 View Board
               </button>
-              <button 
-                onClick={() => {
-                  setProjects(projects.filter(p => p.id !== project.id));
-                }}
-                className="text-red-500 hover:text-red-600"
+
+              {/* Assign Members Button */}
+              <button
+                onClick={() => onAssignMembers(project)} // Open the modal for the selected project
+                className="bg-green-500 text-white px-3 py-1 text-sm rounded-md hover:bg-green-600 transition"
               >
-                Delete
+                Assign Members
+              </button>
+
+              {/* Delete Project Button */}
+              <button
+                onClick={() => handleDeleteProject(project.id)} // Call delete function when clicked
+                className="bg-red-500 text-white px-3 py-1 text-sm rounded-md hover:bg-red-600 transition"
+              >
+                Delete Project
               </button>
             </div>
           </div>
