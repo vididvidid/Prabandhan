@@ -46,14 +46,12 @@ function App() {
   return (
     <Router>
       <div className="flex flex-col min-h-screen bg-gray-50">
-        {/* Navbar */}
+
         <Navbar user={user} login={login} logout={() => setUser(null)} />
 
         <div className="flex flex-1 pt-16">
-          {/* Sidebar */}
           <Sidebar />
 
-          {/* Main Content */}
           <div className="flex-1 p-6">
             <Routes>
               <Route
@@ -66,6 +64,7 @@ function App() {
           </div>
         </div>
       </div>
+      
     </Router>
   );
 }

@@ -1,18 +1,33 @@
 import { useState } from 'react';
 
-function AddProjectModal({ setShowAddProjectModal, setProjects }) {
+function AddProjectModal({ 
+  setShowAddProjectModal, 
+  setProjects, 
+  availableMembers = [] 
+}) {
+  const projectTypes = [
+    'Business', 
+    'Software', 
+    'Hardware', 
+    'Design', 
+    'Research', 
+    'Marketing'
+  ];
+
   const [newProject, setNewProject] = useState({
     name: '',
     description: '',
+    type: '',
+    startDate: '',
+    endDate: '',
+    assignedMembers: []
   });
 
-  // Handle the form submission
   const handleSubmit = (e) => {
     e.preventDefault();
     const newProjectData = {
-      id: Date.now(), // Generate a unique id using timestamp
-      name: newProject.name,
-      description: newProject.description,
+      id: Date.now(),
+      ...newProject,
       kanbanData: {
         todos: [],
         wip: [],
@@ -20,11 +35,17 @@ function AddProjectModal({ setShowAddProjectModal, setProjects }) {
       },
     };
 
-    // Add the new project to the list
     setProjects((prevProjects) => [...prevProjects, newProjectData]);
-
-    // Close the modal
     setShowAddProjectModal(false);
+  };
+
+  const handleMemberToggle = (memberId) => {
+    setNewProject(prev => ({
+      ...prev,
+      assignedMembers: prev.assignedMembers.includes(memberId)
+        ? prev.assignedMembers.filter(id => id !== memberId)
+        : [...prev.assignedMembers, memberId]
+    }));
   };
 
   return (
@@ -42,8 +63,9 @@ function AddProjectModal({ setShowAddProjectModal, setProjects }) {
               required
             />
           </div>
+
           <div className="mb-4">
-            <label className="block mb-1 font-medium">Description</label>
+            <label className="block mb-1 font-medium">Project Description</label>
             <textarea
               value={newProject.description}
               onChange={(e) => setNewProject({ ...newProject, description: e.target.value })}
@@ -51,6 +73,72 @@ function AddProjectModal({ setShowAddProjectModal, setProjects }) {
               required
             />
           </div>
+
+          <div className="mb-4">
+            <label className="block mb-1 font-medium">Project Type</label>
+            <select
+              value={newProject.type}
+              onChange={(e) => setNewProject({ ...newProject, type: e.target.value })}
+              className="w-full border border-gray-300 rounded p-2"
+              required
+            >
+              <option value="">Select Project Type</option>
+              {projectTypes.map((type) => (
+                <option key={type} value={type}>{type}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="mb-4">
+            <label className="block mb-1 font-medium">Start Date</label>
+            <input
+              type="date"
+              value={newProject.startDate}
+              onChange={(e) => setNewProject({ ...newProject, startDate: e.target.value })}
+              className="w-full border border-gray-300 rounded p-2"
+              required
+            />
+          </div>
+
+          <div className="mb-4">
+            <label className="block mb-1 font-medium">End Date</label>
+            <input
+              type="date"
+              value={newProject.endDate}
+              onChange={(e) => setNewProject({ ...newProject, endDate: e.target.value })}
+              className="w-full border border-gray-300 rounded p-2"
+              required
+            />
+          </div>
+
+          <div className="mb-4">
+            <label className="block mb-1 font-medium">Assign Members</label>
+            {availableMembers.length > 0 ? (
+              <div className="grid grid-cols-2 gap-2">
+                {availableMembers.map((member) => (
+                  <label 
+                    key={member.id} 
+                    className={`flex items-center p-2 rounded cursor-pointer ${
+                      newProject.assignedMembers.includes(member.id) 
+                        ? 'bg-blue-100 border-blue-500' 
+                        : 'bg-gray-100'
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={newProject.assignedMembers.includes(member.id)}
+                      onChange={() => handleMemberToggle(member.id)}
+                      className="mr-2"
+                    />
+                    {member.name}
+                  </label>
+                ))}
+              </div>
+            ) : (
+              <p className="text-gray-500">No members available</p>
+            )}
+          </div>
+
           <button
             type="submit"
             className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"

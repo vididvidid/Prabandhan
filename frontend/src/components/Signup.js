@@ -1,66 +1,89 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+// import axios from "axios";
 
-function Signup({ signup }) {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const navigate = useNavigate();
+function Signup({ navigateToLogin }) {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState("team_member"); // Default role
 
-  // Handle signup form submission
+  // const handleSignup = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const response = await axios.post("http://localhost:5000/signup", {
+  //       username,
+  //       password,
+  //       role,
+  //     });
+  //     alert(response.data.message);
+  //     navigateToLogin();
+  //   } catch (err) {
+  //     alert(err.response.data.message || "Signup failed");
+  //   }
+  // };
+
   const handleSignup = (e) => {
-    e.preventDefault();
-    if (name && email && password) {
-      signup(name); // Pass the name to the signup function
-      navigate('/'); // Redirect to the home page after successful signup
-    } else {
-      alert('Please fill in all fields');
-    }
-  };
+      e.preventDefault();
+      console.log(e);
+    };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50">
-      <div className="bg-white p-6 rounded shadow-md w-full max-w-sm">
-        <h2 className="text-lg font-bold mb-4 text-center">Signup</h2>
-        <form onSubmit={handleSignup}>
-          <div className="mb-4">
-            <label className="block mb-1 font-medium">Name</label>
-            <input
-              type="text"
-              className="w-full border border-gray-300 rounded p-2"
-              required
-              value={name}
-              onChange={(e) => setName(e.target.value)} // Set name state on input change
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block mb-1 font-medium">Email</label>
-            <input
-              type="email"
-              className="w-full border border-gray-300 rounded p-2"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)} // Set email state on input change
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block mb-1 font-medium">Password</label>
-            <input
-              type="password"
-              className="w-full border border-gray-300 rounded p-2"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)} // Set password state on input change
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600"
+    <div className="w-full max-w-sm mx-auto mt-20">
+      <form onSubmit={handleSignup} className="bg-white p-6 shadow-md rounded">
+        <h2 className="text-lg font-semibold mb-4 text-center">Sign Up</h2>
+        
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-2">Username</label>
+          <input
+            type="text"
+            className="w-full p-2 border rounded"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-2">Password</label>
+          <input
+            type="password"
+            className="w-full p-2 border rounded"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-2">Role</label>
+          <select
+            className="w-full p-2 border rounded"
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
           >
-            Signup
+            <option value="admin">Admin</option>
+            <option value="manager">Manager</option>
+            <option value="team_member">Team Member</option>
+          </select>
+        </div>
+
+        <button
+          type="submit"
+          className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Sign Up
+        </button>
+
+        <div className="text-sm text-center mt-4">
+          Already have an account?{" "}
+          <button
+            type="button"
+            onClick={navigateToLogin}
+            className="text-blue-500 underline"
+          >
+            Log in here
           </button>
-        </form>
-      </div>
+        </div>
+      </form>
     </div>
   );
 }
